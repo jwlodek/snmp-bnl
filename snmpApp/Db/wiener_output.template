@@ -1,0 +1,109 @@
+# Output channel status
+record (mbbiDirect,"$(P)Status:$(CHAN)-I")
+{
+	field (DESC, "Channel$(CHAN) Status")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) admin BITS: 128")
+	field (SCAN, "$(FASTRATE)")
+	field (NOBT, "8")	
+	field (FLNK, "$(P)Status:$(CHAN)-Sts")
+	info (OID, "$(MIB)::outputStatus.$(channel)")
+}
+
+record (calc,"$(P)Status:$(CHAN)-Sts")
+{
+	field (DESC, "Channel$(CHAN) Status")
+	field (INPA, "$(P)Status:$(CHAN)-I")
+	field (INPB, "0x80")
+	field (CALC, "(A==B)?0:A")
+	field (HIGH, "1")
+	field (HSV,  "MAJOR")
+	field (ADEL, "0")
+}
+
+# outputMeasurementSenseVoltage
+record (ai,"$(P)MV:$(CHAN)-I")
+{
+	field (DESC, "Channel$(CHAN) Measured V")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin Float: 128")
+	field (SCAN,"$(FASTRATE)")	
+	field (PREC, "3")
+	field (ADEL, "0.5")
+	field (HSV , "MAJOR")
+	field (LSV , "MAJOR")
+	info (OID, "$(MIB)::outputMeasurementSenseVoltage.$(channel)")
+}
+
+
+# outputSupervisionMinSenseVoltage: If the measured sense voltage is below this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(P)SMinV:$(CHAN)-SP")
+{
+	field (DESC, "Channel$(CHAN) SMinV")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) admin Float: 128 F")
+	info (OID, "$(MIB)::outputSupervisionMinSenseVoltage.$(channel)")
+}
+
+record (ai,"$(P)SMinV:$(CHAN)-RB")
+{
+	field (DESC, "Channel$(CHAN) SMinV")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin Float: 128")
+	field (PINI, "1")
+	field (SCAN,"$(SLOWRATE)")
+	field (FLNK, "$(P)MinMax:$(CHAN)-FOut_")
+	info (OID, "$(MIB)::outputSupervisionMinSenseVoltage.$(channel)")
+}
+
+# outputSupervisionMaxSenseVoltage: If the measured sense voltage is above this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(P)SMaxV:$(CHAN)-SP")
+{
+	field (DESC, "Channel$(CHAN) SMaxV Set")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) admin Float: 128 F")
+	info (OID, "$(MIB)::outputSupervisionMaxSenseVoltage.$(channel)")
+}
+
+record (ai,"$(P)SMaxV:$(CHAN)-RB")
+{
+	field (DESC, "Channel$(CHAN) SMaxV")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin Float: 128")
+	field (PINI, "1")
+	field (SCAN,"$(SLOWRATE)")
+	field (FLNK, "$(P)MinMax:$(CHAN)-FOut_")
+	info (OID, "$(MIB)::outputSupervisionMaxSenseVoltage.$(channel)")
+}
+
+# Limits for -12V are reported as positive numbers :(
+# so we play games to set them correctly
+record(calcout, "$(P)MinMax:$(CHAN)-FOut_")
+{
+	field(INPA, "$(P)SMinV:$(CHAN)-RB NPP")
+	field(INPB, "$(P)SMaxV:$(CHAN)-RB NPP")
+	field(INPC, "$(MULT=1)")
+	field(CALC, "C>0?MIN(A,B):MIN(-A,-B)")
+	field(OUT,  "$(P)MV:$(CHAN)-I.LOW")
+	field(FLNK, "$(P)MinMax2:$(CHAN)-FOut_")
+}
+
+record(calcout, "$(P)MinMax2:$(CHAN)-FOut_")
+{
+	field(INPA, "$(P)SMinV:$(CHAN)-RB NPP")
+	field(INPB, "$(P)SMaxV:$(CHAN)-RB NPP")
+	field(INPC, "$(MULT=1)")
+	field(CALC, "C>0?MAX(A,B):MAX(-A,-B)")
+	field(OUT , "$(P)MV:$(CHAN)-I.HIGH")
+}
+
+# outputSupervisionBehavior: define the behavior of the output Chnel/power supply after failure
+record (longin,"$(P)SB:$(CHAN)-I")
+{
+	field (DESC, "$(CHAN) SuperBehavior")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (SCAN, "$(SLOWRATE)")
+	info (OID, "$(MIB)::outputSupervisionBehavior.$(channel)")
+}
+

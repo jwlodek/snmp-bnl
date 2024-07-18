@@ -1,0 +1,25 @@
+file apcPdu_all_port.template
+{
+  pattern {  C , MaxCurrent , WarnCurrent, LimitCurrent , MaxPower , WarnPower , LimitPower }
+  {  private , 10 , 8 , 15, 1200 , 960 , 2000}
+}
+
+file apcPdu_voltage1.template
+{
+  pattern { C }
+  { private }
+}
+
+file apcPdu_single_port.template
+{
+  pattern { C, CHAN, ONAME }
+  {  private , 1 , "Outlet 1" }	
+  {  private , 2 , "Outlet 2" }
+  {  private , 3 , "Outlet 3" }
+  {  private , 4 , "Outlet 4" }
+  {  private , 5 , "Outlet 5" }
+  {  private , 6 , "Outlet 6" }
+  {  private , 7 , "Outlet 7" }
+  {  private , 8 , "Outlet 8" }
+}
+

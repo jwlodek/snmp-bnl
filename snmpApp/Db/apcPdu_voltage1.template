@@ -1,0 +1,58 @@
+record(ai, "$(SYS)$(DEV)E-RB")
+{
+        field(DTYP, "Snmp")
+        field(DESC, "Line Voltage Readback")
+        field(INP,  "@$(IP) $(C) PowerNet-MIB::rPDUIdentDeviceLinetoLineVoltage.0 INTEGER: 100")
+        field(SCAN, "5 second")
+}
+
+record(ao, "$(SYS)$(DEV)E-SP")
+{
+        field(DTYP, "Snmp")
+        field(DESC, "Line Voltage Setpoint")
+        #field(OUT,  "@$(IP) $(C) PowerNet-MIB::rPDUIdentDeviceLinetoLineVoltage.0 INTEGER: 100 i")
+        field(OUT,  "@$(IP) $(C) PowerNet-MIB::rPDUIdentDeviceLinetoLineVoltage.0 ( 100 i")
+        field(FLNK, "$(SYS)$(DEV)E-RB")
+	
+}
+
+record(ai, "$(SYS)$(DEV)Pwr:Factor-RB_")
+{
+        field(DTYP, "Snmp")
+        field(INP,  "@$(IP) $(C) PowerNet-MIB::rPDUIdentDevicePowerFactor.0 INTEGER: 100")
+        field(SCAN, "5 second")
+	field(FLNK, "$(SYS)$(DEV)Pwr:Factor-RB")
+}
+
+record(longout, "$(SYS)$(DEV)Pwr:Factor-SP_")
+{
+        field(DTYP, "Snmp")
+        #field(OUT,  "@$(IP) $(C) PowerNet-MIB::rPDUIdentDevicePowerFactor.0 INTEGER: 100 i")
+        field(OUT,  "@$(IP) $(C) PowerNet-MIB::rPDUIdentDevicePowerFactor.0 ( 100 i")
+        field(FLNK, "$(SYS)$(DEV)Pwr:Factor-RB_")
+}
+
+record(calc, "$(SYS)$(DEV)Pwr:Factor-RB")
+{
+	field(CALC, "A/1000.0")
+	field(INPA, "$(SYS)$(DEV)Pwr:Factor-RB_")
+	field(DESC, "Power Factor Readback")
+	field(PREC, "4")
+	field(LOPR, "0.001")
+	field(HOPR, "1.000")
+}
+
+record(calcout, "$(SYS)$(DEV)Pwr:Factor-Calc_")
+{
+	field(CALC, "A * 1000.0")
+	field(INPA, "$(SYS)$(DEV)Pwr:Factor-SP")
+	field(OUT,  "$(SYS)$(DEV)Pwr:Factor-SP_ PP")
+	field(DESC, "Power Factor Setpoint")
+	field(OOPT, "Every Time")
+}
+
+record(ao, "$(SYS)$(DEV)Pwr:Factor-SP")
+{
+	field(DESC, "Power Factor Setpoint")
+	field(FLNK, "$(SYS)$(DEV)Pwr:Factor-Calc_")
+}

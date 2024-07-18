@@ -1,0 +1,49 @@
+# fanOperatingTime: the time in seconds for how long the fan tray was switched on
+record (longin,"$(P)Time-I")
+{
+	field (DESC, "Fan Operating Time")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (SCAN,"$(SLOWRATE)")
+	field (EGU , "s")
+	info (OID, "$(MIB)::fanOperatingTime.0")
+}
+
+# fanNominalSpeed: the nominal fan rotation speed(RPM, Revolution Per Minute)
+record (longout,"$(P)Speed-SP")
+{
+	field (DESC, "Set Fan Nominal Speed")
+	field (DTYP,"Snmp")
+	#field (OUT,"@$(IP) admin INTEGER: 128 i")
+	field (OUT,"@$(IP) admin ( 128 i")
+    info (OID, "$(MIB)::fanNominalSpeed.0")
+}
+
+record (longin,"$(P)Speed-RB")
+{
+	field (DESC, "Fan Nominal Speed")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (PINI, "1")
+	field (SCAN,"$(SLOWRATE)")      
+	info (OID, "$(MIB)::fanNominalSpeed.0")
+}
+
+# fanSpeed: the measured fan rotation speed(RPM, Revolution Per Minute)
+record (longin,"$(P)Speed-I")
+{
+	field (DESC, "Fan Speed")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (SCAN,"$(SLOWRATE)")
+	field (ADEL,"200")
+	field (HIGH,"5000")
+	field (HSV ,"INVALID")
+ 	field (LOW ,"2000")
+	field (LSV ,"MINOR")
+	field (LOLO,"1000")
+	field (LLSV,"MAJOR")
+	info (OID, "$(MIB)::fanSpeed.1")
+}
+
+

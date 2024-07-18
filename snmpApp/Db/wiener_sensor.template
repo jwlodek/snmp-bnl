@@ -1,0 +1,85 @@
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(P)SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (PINI,"1")
+	info (OID, "$(MIB)::sensorNumber.0")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(P)Temp:$(SNUM)-I")
+{
+	field (DESC, "Sensor$(SNUM) Temp")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (SCAN,"$(FASTRATE)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+	info (OID, "$(MIB)::sensorTemperature.$(SNUM)")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(P)WT:$(SNUM)-SP")
+{
+	field (DESC, "Sensor$(SNUM) WarningT Set")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) admin INTEGER: 128 i")
+	info (OID, "$(MIB)::sensorWarningThreshold.$(SNUM)")
+}
+
+
+record (longin,"$(P)WT:$(SNUM)-RB")
+{
+	field (DESC, "Sensor$(SNUM) WarningT")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (PINI,"1")
+	field (SCAN,"$(SLOWRATE)")
+	info (OID, "$(MIB)::sensorWarningThreshold.$(SNUM)")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(P)FT:$(SNUM)-SP")
+{
+	field (DESC, "Sensor$(SNUM) FailureT Set")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) admin INTEGER: 128 i")
+	info (OID, "$(MIB)::sensorFailureThreshold.$(SNUM)")
+}
+
+record (longin,"$(P)FT:$(SNUM)-RB")
+{
+	field (DESC, "Sensor$(SNUM) FailureT")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin INTEGER: 128")
+	field (PINI,"1")
+	field (SCAN,"$(SLOWRATE)") 
+	info (OID, "$(MIB)::sensorFailureThreshold.$(SNUM)")
+}
+
+record (calc,"$(P)Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "$(SLOWRATE)")
+	field (INPA, "$(P)Temp:1-I")
+	field (INPB, "$(P)Temp:2-I")
+	field (INPC, "$(P)Temp:3-I")
+	field (INPD, "$(P)Temp:4-I")
+	field (INPE, "$(P)Temp:5-I")
+	field (INPF, "$(P)Temp:6-I")
+	field (INPG, "$(P)Temp:7-I")
+	field (INPH, "$(P)Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+

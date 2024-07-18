@@ -1,0 +1,10 @@
+# psOperatingTime: the time in seconds for how long the power supply was switched on
+record (longin,"$(P)OpTime-I")
+{
+	field (DESC, "PS Operating Time")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP) admin INTEGER: 128")
+        field (SCAN,"$(SLOWRATE)")
+	field (EGU , "s")
+        info (OID, "$(MIB)::psOperatingTime.0")
+}

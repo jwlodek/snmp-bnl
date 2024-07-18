@@ -1,0 +1,49 @@
+file wiener_system.template
+{
+   pattern { P   	          , IP             , MIB,            , SLOWRATE  , FASTRATE}
+           { "\$(SYS){\$(D)-System}", "$(IP)" , WIENER-CRATE-MIB, "10 second", "2 second" }
+}
+
+file wiener_output.template
+{
+   pattern { P   	             , IP             , MIB	         , CHAN , channel, SLOWRATE  , FASTRATE, MULT}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 1	, u0	 , "10 second", "2 second", 1}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 2	, u1	 , "10 second", "2 second", 1}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 3	, u2	 , "10 second", "2 second", 1}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 4	, u3	 , "10 second", "2 second", -1}
+}
+
+file wiener_output_current.template
+{
+   pattern {  P   	             , IP             , MIB	         , CHAN , channel, SLOWRATE  , FASTRATE}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 1	, u0	 , "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 2	, u1	 , "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 3	, u2	 , "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 4	, u3	 , "10 second", "2 second"}
+}
+
+file wiener_sensor.template
+{
+   pattern {  P   	             , IP             , MIB	         , SNUM	, SLOWRATE  , FASTRATE}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 1	, "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 2	, "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 3	, "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 4	, "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 5	, "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 6	, "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 7	, "10 second", "2 second"}
+           {  "\$(SYS){\$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 8	, "10 second", "2 second"}
+}
+
+file wiener_fan.template
+{
+   pattern {  P   	         , IP        	  , MIB		     , SLOWRATE  , FASTRATE}
+           {  "\$(SYS){\$(D)-Fan}" , "$(IP)" , WIENER-CRATE-MIB , "10 second", "2 second"}
+}
+
+file wiener_ps.template
+{
+   pattern {  P   	         , IP        	  , MIB		     , SLOWRATE , FASTRATE}
+           {  "\$(SYS){\$(D)-PS}" , "$(IP)" , WIENER-CRATE-MIB , "10 second", "2 second"}
+}
+

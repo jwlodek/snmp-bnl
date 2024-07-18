@@ -1,0 +1,148 @@
+# Database for APC PDU
+
+# Set/Get the outlet name
+record(stringout, "$(SYS)$(DEV)Sw:Name$(CHAN)-SP")
+{
+	field(DESC, "Set Outlet$(CHAN) Name")
+	field(DTYP, "Snmp")
+	field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) STRING: 100")
+	field(SCAN, "Passive")
+	field(FLNK, "$(SYS)$(DEV)Sw:Name$(CHAN)-RB")
+	field(VAL,  "$(ONAME)")
+	info(autosaveFields, "VAL")
+	field(PINI, "1")
+}
+
+record(stringin, "$(SYS)$(DEV)Sw:Name$(CHAN)-RB")
+{
+	field(DESC, "Outlet$(CHAN) Name")
+	field(DTYP, "Snmp")
+	field(INP,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) STRING: 100")
+	field(SCAN, "10 second")
+}
+
+# Operate the outlet
+record(mbbo, "$(SYS)$(DEV)Sw:$(CHAN)-Sel")
+{
+	field(DESC, "Set Outlet$(CHAN) Mode")
+	field(ZRST, "Off")
+	field(ONST, "On")
+	field(TWST, "Reboot")
+	field(THST, "OnWithDelay")
+	field(FRST, "OffWithDelay")
+	field(FVST, "RebootWithDelay")
+	field(ZRVL, "2")
+	field(ONVL, "1")
+	field(TWVL, "3")
+	field(THVL, "5")
+	field(FRVL, "6")
+	field(FVVL, "7")
+	field(FLNK,  "$(SYS)$(DEV)Sw:$(CHAN)-SP")
+}
+
+record (longout,"$(SYS)$(DEV)Sw:$(CHAN)-SP")
+{
+	field(DESC, "Setting Outlet$(CHAN) State")
+	field(DTYP, "Snmp")
+	field(DOL,  "$(SYS)$(DEV)Sw:$(CHAN)-Sel.RVAL")
+	field(OMSL, "closed_loop")
+	field(SCAN, "Passive")
+	field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletCtl.$(CHAN) ( 100")
+	field(FLNK, "$(SYS)$(DEV)Sw:$(CHAN)-RB")
+}
+
+# Get outlet status
+record (longin,"$(SYS)$(DEV)Sw:$(CHAN)-RB")
+{
+	field(DESC, "Raw Outlet$(CHAN) Sts")
+	field(DTYP, "Snmp")
+	field(INP,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletCtl.$(CHAN) ( 100")
+	field(SCAN, "2 second")
+	field(FLNK, "$(SYS)$(DEV)Sw:$(CHAN)-Sts")
+}
+
+record(mbbi, "$(SYS)$(DEV)Sw:$(CHAN)-Sts")
+{
+	field(DTYP, "Raw Soft Channel")
+	field(DESC, "Outlet$(CHAN) Sts")
+	field(INP,  "$(SYS)$(DEV)Sw:$(CHAN)-RB")
+	field(ZRST, "Off")
+        field(ONST, "On")
+        field(TWST, "Reboot")
+        field(THST, "OnWithDelay")
+        field(FRST, "OffWithDelay")
+        field(FVST, "RebootWithDelay")
+        field(ZRVL, "2")
+        field(ONVL, "1")
+        field(TWVL, "3")
+        field(THVL, "5")
+        field(FRVL, "6")
+        field(FVVL, "7")
+}
+
+record(longin,"$(SYS)$(DEV)Sw:OnTime$(CHAN)-RB")
+{
+	field(DESC, "Raw Outlet$(CHAN) Power On Delay Time")
+	field(DTYP, "Snmp")
+	field(INP,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletPowerOnTime.$(CHAN) INTEGER: 100")	
+	field(SCAN, "2 second")
+	field(FLNK, "$(SYS)$(DEV)Sw:OnTime$(CHAN)-Sts")
+}
+
+record(longout,"$(SYS)$(DEV)Sw:OnTime$(CHAN)-SP")
+{
+        field(DESC, "Raw Outlet$(CHAN) Power On Delay Time")
+        field(DTYP, "Snmp")
+        #field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletPowerOnTime.$(CHAN) INTEGER: 100")
+        field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletPowerOnTime.$(CHAN) ( 100 i")
+        field(SCAN, "2 second")
+	    field(DOL,  "$(SYS)$(DEV)Sw:OnTime$(CHAN)-Sel.RVAL")
+        field(OMSL, "closed_loop")
+        field(FLNK, "$(SYS)$(DEV)Sw:OnTime$(CHAN)-RB")
+}
+
+record(mbbo, "$(SYS)$(DEV)Sw:OnTime$(CHAN)-Sel")
+{
+        field(DESC, "Set Outlet$(CHAN) On Time")
+        field(ZRST, "NeverOn")
+        field(ONST, "Immediate")
+        field(TWST, "15 Seconds")
+        field(THST, "30 Seconds")
+        field(FRST, "45 Seconds")
+        field(FVST, "60 Seconds")
+	field(SXST, "120 Seconds")
+	field(SVST, "300 Seconds")
+        field(ZRVL, "1")
+        field(ONVL, "0")
+        field(TWVL, "15")
+        field(THVL, "30")
+        field(FRVL, "45")
+        field(FVVL, "60")
+	field(SXVL, "120")
+	field(SVVL, "300")
+        field(FLNK,  "$(SYS)$(DEV)Sw:OnTime$(CHAN)-SP")
+	info(autosaveFields, "VAL")
+}
+
+record(mbbi, "$(SYS)$(DEV)Sw:OnTime$(CHAN)-Sts")
+{
+	field(DESC, "Set Outlet$(CHAN) On Time")
+	field(INP,  "$(SYS)$(DEV)Sw:OnTime$(CHAN)-RB")
+	field(DTYP, "Raw Soft Channel")	
+	field(ZRST, "NeverOn")
+	field(ONST, "Immediate")
+	field(TWST, "15 Seconds")
+	field(THST, "30 Seconds")
+	field(FRST, "45 Seconds")
+	field(FVST, "60 Seconds")
+	field(SXST, "120 Seconds")
+	field(SVST, "300 Seconds")
+	field(ZRVL, "1")
+	field(ONVL, "0")
+	field(TWVL, "15")
+	field(THVL, "30")
+	field(FRVL, "45")
+	field(FVVL, "60")
+	field(SXVL, "120")
+	field(SVVL, "300")
+}    

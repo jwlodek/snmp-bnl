@@ -1,0 +1,182 @@
+#
+# Identification
+#
+
+record(stringin, "$(Sys)$(Dev)SwVer-I")
+{
+  field(DTYP, "Snmp")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsIdentUPSSoftwareVersion.0 STRING: 63")
+  field(SCAN, "10 second")
+}
+
+record(stringin, "$(Sys)$(Dev)HwVer-I")
+{
+  field(DTYP, "Snmp")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsIdentModel.0 STRING: 127")
+  field(SCAN, "10 second")
+}
+
+#
+# Battery Status
+#
+
+record (longin,"$(Sys)$(Dev)Sts:Battery-Sts_")
+{
+    field(DTYP, "Snmp")
+    field(INP,  "@$(IP) $(C) UPS-MIB::upsBatteryStatus.0 ( 50 i")
+    field(SCAN, "5 second")
+    field(FLNK, "$(Sys)$(Dev)Sts:Battery-Sts")
+}
+
+record(mbbi, "$(Sys)$(Dev)Sts:Battery-Sts")
+{
+    field(DESC, "UPS Battery Status")
+    field(INP,  "$(Sys)$(Dev)Sts:Battery-Sts_")
+    field(ZRST, "Undefined")
+    field(ONST, "Unknown")
+    field(TWST, "Normal")
+    field(THST, "Depleted")
+    field(FRST, "Discharging")
+    field(FVST, "Failure")
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "NO_ALARM")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "MAJOR")
+    field(FRSV, "MAJOR")
+    field(FVSV, "MAJOR")
+}
+
+#
+# Output Status
+#
+
+record(longin, "$(Sys)$(Dev)Sts:Output-Sts_")
+{
+  field(DTYP, "Snmp")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsOutputSource.0 ( 50 i")
+  field(SCAN, "5 second")
+  field(FLNK, "$(Sys)$(Dev)Sts:Output-Sts")
+}
+
+record(mbbi, "$(Sys)$(Dev)Sts:Output-Sts")
+{
+  field(DESC, "UPS Output Status")
+  field(INP,  "$(Sys)$(Dev)Sts:Output-Sts_")
+  field(ZRST, "Undefined")
+  field(ONST, "Other")
+  field(TWST, "None")
+  field(THST, "Normal")
+  field(FRST, "Bypass")
+  field(FVST, "Battery")
+  field(SXST, "Booster")
+  field(SVST, "Reducer")
+  field(ZRSV, "NO_ALARM")
+  field(ONSV, "NO_ALARM")
+  field(TWSV, "NO_ALARM")
+  field(THSV, "NO_ALARM")
+  field(FRSV, "MAJOR")
+  field(FVSV, "MAJOR")
+  field(SXSV, "MAJOR")
+  field(SVSV, "MAJOR")
+}
+
+record(ai, "$(Sys)$(Dev)K:OnBattery-I")
+{
+  field(DTYP, "Snmp")
+  field(DESC, "UPS Time On Battery")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsSecondsOnBattery.0 INTEGER: 100")
+  field(EGU,  "Seconds")
+  field(SCAN, "5 second")
+}
+
+record(ai, "$(Sys)$(Dev)K:Battery-I")
+{
+  field(DTYP, "Snmp")
+  field(DESC, "UPS Estimated Minutes Remaining")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsEstimatedMinutesRemaining.0 INTEGER: 100 ")
+  field(EGU,  "Minutes")
+  field(SCAN, "5 second")
+}
+
+record(ai, "$(Sys)$(Dev)L:Battery-I")
+{
+  field(DTYP, "Snmp")
+  field(DESC, "UPS Estimated Charge Remaining")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsEstimatedChargeRemaining.0 INTEGER: 100 ")
+  field(EGU,  "Minutes")
+  field(SCAN, "5 second")
+}
+
+#
+# Power Monitoring for UPS
+#
+
+record(ai, "$(Sys)$(Dev)E:Input-I")
+{
+  field(DTYP, "Snmp")
+  field(DESC, "UPS Input Voltage")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsInputVoltage.1 INTEGER: 100")
+  field(SCAN, "5 second")
+  field(EGU,  "Volts RMS")
+}
+
+record(ai, "$(Sys)$(Dev)I:Input-I_")
+{
+  field(DTYP, "Snmp")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsInputCurrent.1 INTEGER: 100")
+  field(SCAN, "5 second")
+  field(FLNK, "$(Sys)$(Dev)I:Input-I")
+}
+
+record(calc, "$(Sys)$(Dev)I:Input-I")
+{
+  field(DESC, "UPS Input Current")
+  field(EGU,  "Amps RMS") 
+  field(CALC, "A*0.1")
+  field(INPA, "$(Sys)$(Dev)I:Input-I_")
+}
+
+record(ai, "$(Sys)$(Dev)Pwr:Input-I")
+{
+  field(DTYP, "Snmp")
+  field(DESC, "UPS Input Power")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsInputTruePower.1 INTEGER: 100")
+  field(SCAN, "5 second")
+  field(EGU,  "Watts")
+}
+
+record(ai, "$(Sys)$(Dev)E:Output-I")
+{
+  field(DTYP, "Snmp")
+  field(DESC, "UPS Output Voltage")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsOutputVoltage.1 INTEGER: 100")
+  field(SCAN, "5 second")
+  field(EGU,  "Volts RMS")
+}
+
+record(ai, "$(Sys)$(Dev)I:Output-I_")
+{
+  field(DTYP, "Snmp")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsOutputCurrent.1 INTEGER: 100")
+  field(SCAN, "5 second")
+  field(FLNK, "$(Sys)$(Dev)I:Output-I")
+}
+
+record(calc, "$(Sys)$(Dev)I:Output-I")
+{
+  field(DESC, "UPS Output Current")
+  field(EGU,  "Amps RMS") 
+  field(CALC, "A*0.1")
+  field(INPA, "$(Sys)$(Dev)I:Output-I_")
+}
+
+record(ai, "$(Sys)$(Dev)Pwr:Output-I")
+{
+  field(DTYP, "Snmp")
+  field(DESC, "UPS Input Power")
+  field(INP,  "@$(IP) $(C) UPS-MIB::upsOutputPower.1 INTEGER: 100")
+  field(SCAN, "5 second")
+  field(EGU,  "Watts")
+}
+
+

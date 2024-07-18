@@ -1,0 +1,42 @@
+
+
+# outputMeasurementCurrent
+record (ai,"$(P)I:$(CHAN)-I")
+{
+	field (DESC, "Channel$(CHAN) Measured V")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin Float: 128")
+	field (SCAN,"$(FASTRATE)")
+	field (PREC, "4")
+	field (ADEL, "0.1")
+	field (LOW , "-0.01")
+	field (HSV , "MAJOR")
+	field (LSV , "MINOR")
+	info (OID, "$(MIB)::outputMeasurementCurrent.$(channel)")
+}
+
+record (ao,"$(P)I:Max$(CHAN)-SP")
+{
+	field (DESC, "Channel$(CHAN) SMinV")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) admin Float: 128 F")
+	info (OID, "$(MIB)::outputSupervisionMaxCurrent.$(channel)")
+}
+
+record (ai,"$(P)I:Max$(CHAN)-RB")
+{
+	field (DESC, "Channel$(CHAN) SMinV")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) admin Float: 128")
+	field (PINI, "1")
+	field (SCAN,"$(SLOWRATE)")
+	field (FLNK, "$(P)I:Max$(CHAN)-FOut_")
+	info (OID, "$(MIB)::outputSupervisionMaxCurrent.$(channel)")
+}
+
+record(dfanout, "$(P)I:Max$(CHAN)-FOut_")
+{
+	field(OMSL, "closed_loop")
+	field(DOL , "$(P)I:Max$(CHAN)-RB NPP")
+	field(OUTA, "$(P)I:$(CHAN)-I.HIGH")
+}

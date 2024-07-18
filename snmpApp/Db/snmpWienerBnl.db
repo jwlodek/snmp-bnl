@@ -1,0 +1,1409 @@
+# Main switch
+record (bo, "$(SYS){$(D)-System}MainSwitch-Sel") {
+        field(DESC, "Main Switch Set")
+        field( ZNAM, "Off")
+        field( ONAM, "On")
+        field( OUT, "$(SYS){$(D)-System}MainSwitch-SP_ PP")
+}
+
+record (longout,"$(SYS){$(D)-System}MainSwitch-SP_")
+{
+	field (DESC, "Main Switch RSet")
+	field (DTYP, "Snmp")
+        field (OUT,  "@$(IP,recursive) admin WIENER-CRATE-MIB::sysMainSwitch.0")
+	field (HOPR, "1")
+	field (LOPR, "0")
+}
+
+record (longin,"$(SYS){$(D)-System}MainSwitch-RB_")
+{
+	field (DESC, "Main Switch RValue")
+	field (DTYP, "Snmp")
+        field (INP,  "@$(IP,recursive) admin WIENER-CRATE-MIB::sysMainSwitch.0")
+        field (SCAN,"10 second")
+        field (FLNK, "$(SYS){$(D)-System}MainSwitch-RB")
+}
+
+record (bi, "$(SYS){$(D)-System}MainSwitch-RB") {
+        field (DESC, "Main Switch Value")
+        field (INP,  "$(SYS){$(D)-System}MainSwitch-RB_")
+        field (ZNAM, "Off")
+        field (ONAM, "On")
+}
+
+# VME reset
+record (longout,"$(SYS){$(D)-System}VmeReset-Cmd")
+{
+	field (DESC, "VME Reset")
+	field (DTYP, "Snmp")
+        field (OUT,  "@$(IP,recursive) admin WIENER-CRATE-MIB::sysVmeSysReset.0")
+	field (SCAN, "Passive")
+}
+
+# System status
+record (mbbiDirect,"$(SYS){$(D)-System}Status-I")
+{
+	field (DESC, "System RStatus")
+	field (DTYP, "Snmp")
+        field (INP,  "@$(IP,recursive) public WIENER-CRATE-MIB::sysStatus.0")
+        field (SCAN, "10 second")
+        field (NOBT, "16")	
+        field (FLNK, "$(SYS){$(D)-System}Status-Sts")
+}
+
+record (calc,"$(SYS){$(D)-System}Status-Sts")
+{
+	field (DESC, "System Status")
+	field (INPA, "$(SYS){$(D)-System}Status-I")
+	field (INPB, "0x8000")
+	field (CALC, "(A==B)?0:A")
+	field (HIGH, "1")
+	field (HSV,  "MAJOR")
+	field (ADEL, "0")
+        field (FLNK, "$(SYS){$(D)-System}Mainon-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Mainon-Sts")
+{
+	field (DESC, "mainOn (0)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.BF")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+        field (FLNK, "$(SYS){$(D)-System}Exinhibit-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Exinhibit-Sts")
+{
+	field (DESC, "mainInhibit(1)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.BE")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+        field (FLNK, "$(SYS){$(D)-System}Localonly-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Localonly-Sts")
+{
+	field (DESC, "localControlOnly (2)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.BD")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+        field (FLNK, "$(SYS){$(D)-System}Pwr-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Pwr-Sts")
+{
+	field (DESC, "inputFailure (3)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.BC")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MAJOR")
+        field (FLNK, "$(SYS){$(D)-System}Output-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Output-Sts")
+{
+	field (DESC, "outputFailure (4)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.BB")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MAJOR")
+        field (FLNK, "$(SYS){$(D)-System}Fan-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Fan-Sts")
+{
+	field (DESC, "fantrayFailure (5)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.BA")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+        field (FLNK, "$(SYS){$(D)-System}Sensor-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Sensor-Sts")
+{
+	field (DESC, "sensorFailure (6)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.B9")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+        field (FLNK, "$(SYS){$(D)-System}Vmesys-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Vmesys-Sts")
+{
+	field (DESC, "VmeSysfail(7)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.B8")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+        field (FLNK, "$(SYS){$(D)-System}Plugplay-Sts")
+}
+
+record (bi,"$(SYS){$(D)-System}Plugplay-Sts")
+{
+	field (DESC, "plugAndPlayIncompatible (8)")
+	field (INP,  "$(SYS){$(D)-System}Status-I.B7")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+}
+
+record (longin,"$(SYS){$(D)-System}SysOperatingTime-I")
+{
+	field (DESC, "System Operating Time")
+	field (DTYP, "Snmp")
+        field (INP,  "@$(IP,recursive) admin WIENER-CRATE-MIB::sysOperatingTime.0")
+        field (SCAN, "1 second")
+}
+
+
+# Output channel status
+record (mbbiDirect,"$(SYS){$(D)-Output}Status:1-I")
+{
+	field (DESC, "Channel1 Status")
+	field (DTYP, "Snmp")
+        field (INP,  "@$(IP,recursive) admin WIENER-CRATE-MIB::outputStatus.u0")
+        field (SCAN, "2 second")
+        field (NOBT, "8")	
+	field (FLNK, "$(SYS){$(D)-Output}Status:1-Sts")
+}
+
+record (calc,"$(SYS){$(D)-Output}Status:1-Sts")
+{
+	field (DESC, "Channel1 Status")
+	field (INPA, "$(SYS){$(D)-Output}Status:1-I")
+	field (INPB, "0x80")
+	field (CALC, "(A==B)?0:A")
+	field (HIGH, "1")
+	field (HSV,  "MAJOR")
+	field (ADEL, "0")
+}
+
+# outputMeasurementSenseVoltage
+record (ai,"$(SYS){$(D)-Output}MV:1-I")
+{
+	field (DESC, "Channel1 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u0")
+        field (SCAN,"2 second")	
+	field (PREC, "3")
+	field (ADEL, "0.5")
+	field (HSV , "MAJOR")
+	field (LSV , "MAJOR")
+}
+
+
+# outputSupervisionMinSenseVoltage: If the measured sense voltage is below this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMinV:1-SP")
+{
+	field (DESC, "Channel1 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u0")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMinV:1-RB")
+{
+	field (DESC, "Channel1 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u0")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:1-FOut_")
+}
+
+# outputSupervisionMaxSenseVoltage: If the measured sense voltage is above this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMaxV:1-SP")
+{
+	field (DESC, "Channel1 SMaxV Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u0")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMaxV:1-RB")
+{
+	field (DESC, "Channel1 SMaxV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u0")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:1-FOut_")
+}
+
+# Limits for -12V are reported as positive numbers :(
+# so we play games to set them correctly
+record(calcout, "$(SYS){$(D)-Output}MinMax:1-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:1-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:1-RB NPP")
+	field(INPC, "1")
+	field(CALC, "C>0?MIN(A,B):MIN(-A,-B)")
+	field(OUT,  "$(SYS){$(D)-Output}MV:1-I.LOW")
+	field(FLNK, "$(SYS){$(D)-Output}MinMax2:1-FOut_")
+}
+
+record(calcout, "$(SYS){$(D)-Output}MinMax2:1-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:1-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:1-RB NPP")
+	field(INPC, "1")
+	field(CALC, "C>0?MAX(A,B):MAX(-A,-B)")
+	field(OUT , "$(SYS){$(D)-Output}MV:1-I.HIGH")
+}
+
+# outputSupervisionBehavior: define the behavior of the output Chnel/power supply after failure
+record (longin,"$(SYS){$(D)-Output}SB:1-I")
+{
+	field (DESC, "1 SuperBehavior")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionBehavior.u0")
+	field (SCAN, "10 second")
+}
+
+# Output channel status
+record (mbbiDirect,"$(SYS){$(D)-Output}Status:2-I")
+{
+	field (DESC, "Channel2 Status")
+	field (DTYP, "Snmp")
+        field (INP,  "@$(IP,recursive) admin WIENER-CRATE-MIB::outputStatus.u1")
+        field (SCAN, "2 second")
+        field (NOBT, "8")	
+	field (FLNK, "$(SYS){$(D)-Output}Status:2-Sts")
+}
+
+record (calc,"$(SYS){$(D)-Output}Status:2-Sts")
+{
+	field (DESC, "Channel2 Status")
+	field (INPA, "$(SYS){$(D)-Output}Status:2-I")
+	field (INPB, "0x80")
+	field (CALC, "(A==B)?0:A")
+	field (HIGH, "1")
+	field (HSV,  "MAJOR")
+	field (ADEL, "0")
+}
+
+# outputMeasurementSenseVoltage
+record (ai,"$(SYS){$(D)-Output}MV:2-I")
+{
+	field (DESC, "Channel2 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u1")
+        field (SCAN,"2 second")	
+	field (PREC, "3")
+	field (ADEL, "0.5")
+	field (HSV , "MAJOR")
+	field (LSV , "MAJOR")
+}
+
+
+# outputSupervisionMinSenseVoltage: If the measured sense voltage is below this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMinV:2-SP")
+{
+	field (DESC, "Channel2 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u1")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMinV:2-RB")
+{
+	field (DESC, "Channel2 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u1")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:2-FOut_")
+}
+
+# outputSupervisionMaxSenseVoltage: If the measured sense voltage is above this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMaxV:2-SP")
+{
+	field (DESC, "Channel2 SMaxV Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u1")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMaxV:2-RB")
+{
+	field (DESC, "Channel2 SMaxV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u1")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:2-FOut_")
+}
+
+# Limits for -12V are reported as positive numbers :(
+# so we play games to set them correctly
+record(calcout, "$(SYS){$(D)-Output}MinMax:2-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:2-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:2-RB NPP")
+	field(INPC, "1")
+	field(CALC, "C>0?MIN(A,B):MIN(-A,-B)")
+	field(OUT,  "$(SYS){$(D)-Output}MV:2-I.LOW")
+	field(FLNK, "$(SYS){$(D)-Output}MinMax2:2-FOut_")
+}
+
+record(calcout, "$(SYS){$(D)-Output}MinMax2:2-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:2-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:2-RB NPP")
+	field(INPC, "1")
+	field(CALC, "C>0?MAX(A,B):MAX(-A,-B)")
+	field(OUT , "$(SYS){$(D)-Output}MV:2-I.HIGH")
+}
+
+# outputSupervisionBehavior: define the behavior of the output Chnel/power supply after failure
+record (longin,"$(SYS){$(D)-Output}SB:2-I")
+{
+	field (DESC, "2 SuperBehavior")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionBehavior.u1")
+	field (SCAN, "10 second")
+}
+
+# Output channel status
+record (mbbiDirect,"$(SYS){$(D)-Output}Status:3-I")
+{
+	field (DESC, "Channel3 Status")
+	field (DTYP, "Snmp")
+        field (INP,  "@$(IP,recursive) admin WIENER-CRATE-MIB::outputStatus.u2")
+        field (SCAN, "2 second")
+        field (NOBT, "8")	
+	field (FLNK, "$(SYS){$(D)-Output}Status:3-Sts")
+}
+
+record (calc,"$(SYS){$(D)-Output}Status:3-Sts")
+{
+	field (DESC, "Channel3 Status")
+	field (INPA, "$(SYS){$(D)-Output}Status:3-I")
+	field (INPB, "0x80")
+	field (CALC, "(A==B)?0:A")
+	field (HIGH, "1")
+	field (HSV,  "MAJOR")
+	field (ADEL, "0")
+}
+
+# outputMeasurementSenseVoltage
+record (ai,"$(SYS){$(D)-Output}MV:3-I")
+{
+	field (DESC, "Channel3 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u2")
+        field (SCAN,"2 second")	
+	field (PREC, "3")
+	field (ADEL, "0.5")
+	field (HSV , "MAJOR")
+	field (LSV , "MAJOR")
+}
+
+
+# outputSupervisionMinSenseVoltage: If the measured sense voltage is below this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMinV:3-SP")
+{
+	field (DESC, "Channel3 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u2")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMinV:3-RB")
+{
+	field (DESC, "Channel3 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u2")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:3-FOut_")
+}
+
+# outputSupervisionMaxSenseVoltage: If the measured sense voltage is above this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMaxV:3-SP")
+{
+	field (DESC, "Channel3 SMaxV Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u2")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMaxV:3-RB")
+{
+	field (DESC, "Channel3 SMaxV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u2")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:3-FOut_")
+}
+
+# Limits for -12V are reported as positive numbers :(
+# so we play games to set them correctly
+record(calcout, "$(SYS){$(D)-Output}MinMax:3-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:3-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:3-RB NPP")
+	field(INPC, "1")
+	field(CALC, "C>0?MIN(A,B):MIN(-A,-B)")
+	field(OUT,  "$(SYS){$(D)-Output}MV:3-I.LOW")
+	field(FLNK, "$(SYS){$(D)-Output}MinMax2:3-FOut_")
+}
+
+record(calcout, "$(SYS){$(D)-Output}MinMax2:3-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:3-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:3-RB NPP")
+	field(INPC, "1")
+	field(CALC, "C>0?MAX(A,B):MAX(-A,-B)")
+	field(OUT , "$(SYS){$(D)-Output}MV:3-I.HIGH")
+}
+
+# outputSupervisionBehavior: define the behavior of the output Chnel/power supply after failure
+record (longin,"$(SYS){$(D)-Output}SB:3-I")
+{
+	field (DESC, "3 SuperBehavior")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionBehavior.u2")
+	field (SCAN, "10 second")
+}
+
+# Output channel status
+record (mbbiDirect,"$(SYS){$(D)-Output}Status:4-I")
+{
+	field (DESC, "Channel4 Status")
+	field (DTYP, "Snmp")
+        field (INP,  "@$(IP,recursive) admin WIENER-CRATE-MIB::outputStatus.u3")
+        field (SCAN, "2 second")
+        field (NOBT, "8")	
+	field (FLNK, "$(SYS){$(D)-Output}Status:4-Sts")
+}
+
+record (calc,"$(SYS){$(D)-Output}Status:4-Sts")
+{
+	field (DESC, "Channel4 Status")
+	field (INPA, "$(SYS){$(D)-Output}Status:4-I")
+	field (INPB, "0x80")
+	field (CALC, "(A==B)?0:A")
+	field (HIGH, "1")
+	field (HSV,  "MAJOR")
+	field (ADEL, "0")
+}
+
+# outputMeasurementSenseVoltage
+record (ai,"$(SYS){$(D)-Output}MV:4-I")
+{
+	field (DESC, "Channel4 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u3")
+        field (SCAN,"2 second")	
+	field (PREC, "3")
+	field (ADEL, "0.5")
+	field (HSV , "MAJOR")
+	field (LSV , "MAJOR")
+}
+
+
+# outputSupervisionMinSenseVoltage: If the measured sense voltage is below this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMinV:4-SP")
+{
+	field (DESC, "Channel4 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u3")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMinV:4-RB")
+{
+	field (DESC, "Channel4 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMinSenseVoltage.u3")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:4-FOut_")
+}
+
+# outputSupervisionMaxSenseVoltage: If the measured sense voltage is above this value, the power supply performs the function defined by SupervisionAction
+record (ao,"$(SYS){$(D)-Output}SMaxV:4-SP")
+{
+	field (DESC, "Channel4 SMaxV Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u3")
+}
+
+record (ai,"$(SYS){$(D)-Output}SMaxV:4-RB")
+{
+	field (DESC, "Channel4 SMaxV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxSenseVoltage.u3")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}MinMax:4-FOut_")
+}
+
+# Limits for -12V are reported as positive numbers :(
+# so we play games to set them correctly
+record(calcout, "$(SYS){$(D)-Output}MinMax:4-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:4-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:4-RB NPP")
+	field(INPC, "-1")
+	field(CALC, "C>0?MIN(A,B):MIN(-A,-B)")
+	field(OUT,  "$(SYS){$(D)-Output}MV:4-I.LOW")
+	field(FLNK, "$(SYS){$(D)-Output}MinMax2:4-FOut_")
+}
+
+record(calcout, "$(SYS){$(D)-Output}MinMax2:4-FOut_")
+{
+	field(INPA, "$(SYS){$(D)-Output}SMinV:4-RB NPP")
+	field(INPB, "$(SYS){$(D)-Output}SMaxV:4-RB NPP")
+	field(INPC, "-1")
+	field(CALC, "C>0?MAX(A,B):MAX(-A,-B)")
+	field(OUT , "$(SYS){$(D)-Output}MV:4-I.HIGH")
+}
+
+# outputSupervisionBehavior: define the behavior of the output Chnel/power supply after failure
+record (longin,"$(SYS){$(D)-Output}SB:4-I")
+{
+	field (DESC, "4 SuperBehavior")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionBehavior.u3")
+	field (SCAN, "10 second")
+}
+
+
+
+# outputMeasurementCurrent
+record (ai,"$(SYS){$(D)-Output}I:1-I")
+{
+	field (DESC, "Channel1 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementCurrent.u0")
+        field (SCAN,"2 second")
+	field (PREC, "4")
+	field (ADEL, "0.1")
+	field (LOW , "-0.01")
+	field (HSV , "MAJOR")
+	field (LSV , "MINOR")
+}
+
+record (ao,"$(SYS){$(D)-Output}I:Max1-SP")
+{
+	field (DESC, "Channel1 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u0")
+}
+
+record (ai,"$(SYS){$(D)-Output}I:Max1-RB")
+{
+	field (DESC, "Channel1 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u0")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}I:Max1-FOut_")
+}
+
+record(dfanout, "$(SYS){$(D)-Output}I:Max1-FOut_")
+{
+	field(OMSL, "closed_loop")
+	field(DOL , "$(SYS){$(D)-Output}I:Max1-RB NPP")
+	field(OUTA, "$(SYS){$(D)-Output}I:1-I.HIGH")
+}
+
+
+# outputMeasurementCurrent
+record (ai,"$(SYS){$(D)-Output}I:2-I")
+{
+	field (DESC, "Channel2 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementCurrent.u1")
+        field (SCAN,"2 second")
+	field (PREC, "4")
+	field (ADEL, "0.1")
+	field (LOW , "-0.01")
+	field (HSV , "MAJOR")
+	field (LSV , "MINOR")
+}
+
+record (ao,"$(SYS){$(D)-Output}I:Max2-SP")
+{
+	field (DESC, "Channel2 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u1")
+}
+
+record (ai,"$(SYS){$(D)-Output}I:Max2-RB")
+{
+	field (DESC, "Channel2 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u1")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}I:Max2-FOut_")
+}
+
+record(dfanout, "$(SYS){$(D)-Output}I:Max2-FOut_")
+{
+	field(OMSL, "closed_loop")
+	field(DOL , "$(SYS){$(D)-Output}I:Max2-RB NPP")
+	field(OUTA, "$(SYS){$(D)-Output}I:2-I.HIGH")
+}
+
+
+# outputMeasurementCurrent
+record (ai,"$(SYS){$(D)-Output}I:3-I")
+{
+	field (DESC, "Channel3 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementCurrent.u2")
+        field (SCAN,"2 second")
+	field (PREC, "4")
+	field (ADEL, "0.1")
+	field (LOW , "-0.01")
+	field (HSV , "MAJOR")
+	field (LSV , "MINOR")
+}
+
+record (ao,"$(SYS){$(D)-Output}I:Max3-SP")
+{
+	field (DESC, "Channel3 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u2")
+}
+
+record (ai,"$(SYS){$(D)-Output}I:Max3-RB")
+{
+	field (DESC, "Channel3 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u2")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}I:Max3-FOut_")
+}
+
+record(dfanout, "$(SYS){$(D)-Output}I:Max3-FOut_")
+{
+	field(OMSL, "closed_loop")
+	field(DOL , "$(SYS){$(D)-Output}I:Max3-RB NPP")
+	field(OUTA, "$(SYS){$(D)-Output}I:3-I.HIGH")
+}
+
+
+# outputMeasurementCurrent
+record (ai,"$(SYS){$(D)-Output}I:4-I")
+{
+	field (DESC, "Channel4 Measured V")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputMeasurementCurrent.u3")
+        field (SCAN,"2 second")
+	field (PREC, "4")
+	field (ADEL, "0.1")
+	field (LOW , "-0.01")
+	field (HSV , "MAJOR")
+	field (LSV , "MINOR")
+}
+
+record (ao,"$(SYS){$(D)-Output}I:Max4-SP")
+{
+	field (DESC, "Channel4 SMinV")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u3")
+}
+
+record (ai,"$(SYS){$(D)-Output}I:Max4-RB")
+{
+	field (DESC, "Channel4 SMinV")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::outputSupervisionMaxCurrent.u3")
+        field (PINI, "1")
+        field (SCAN,"10 second")
+	field (FLNK, "$(SYS){$(D)-Output}I:Max4-FOut_")
+}
+
+record(dfanout, "$(SYS){$(D)-Output}I:Max4-FOut_")
+{
+	field(OMSL, "closed_loop")
+	field(DOL , "$(SYS){$(D)-Output}I:Max4-RB NPP")
+	field(OUTA, "$(SYS){$(D)-Output}I:4-I.HIGH")
+}
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:1-I")
+{
+	field (DESC, "Sensor1 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.1")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:1-SP")
+{
+	field (DESC, "Sensor1 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.1")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:1-RB")
+{
+	field (DESC, "Sensor1 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.1")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:1-SP")
+{
+	field (DESC, "Sensor1 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.1")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:1-RB")
+{
+	field (DESC, "Sensor1 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.1")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:2-I")
+{
+	field (DESC, "Sensor2 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.2")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:2-SP")
+{
+	field (DESC, "Sensor2 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.2")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:2-RB")
+{
+	field (DESC, "Sensor2 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.2")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:2-SP")
+{
+	field (DESC, "Sensor2 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.2")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:2-RB")
+{
+	field (DESC, "Sensor2 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.2")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:3-I")
+{
+	field (DESC, "Sensor3 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.3")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:3-SP")
+{
+	field (DESC, "Sensor3 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.3")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:3-RB")
+{
+	field (DESC, "Sensor3 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.3")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:3-SP")
+{
+	field (DESC, "Sensor3 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.3")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:3-RB")
+{
+	field (DESC, "Sensor3 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.3")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:4-I")
+{
+	field (DESC, "Sensor4 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.4")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:4-SP")
+{
+	field (DESC, "Sensor4 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.4")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:4-RB")
+{
+	field (DESC, "Sensor4 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.4")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:4-SP")
+{
+	field (DESC, "Sensor4 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.4")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:4-RB")
+{
+	field (DESC, "Sensor4 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.4")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:5-I")
+{
+	field (DESC, "Sensor5 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.5")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:5-SP")
+{
+	field (DESC, "Sensor5 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.5")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:5-RB")
+{
+	field (DESC, "Sensor5 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.5")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:5-SP")
+{
+	field (DESC, "Sensor5 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.5")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:5-RB")
+{
+	field (DESC, "Sensor5 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.5")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:6-I")
+{
+	field (DESC, "Sensor6 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.6")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:6-SP")
+{
+	field (DESC, "Sensor6 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.6")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:6-RB")
+{
+	field (DESC, "Sensor6 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.6")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:6-SP")
+{
+	field (DESC, "Sensor6 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.6")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:6-RB")
+{
+	field (DESC, "Sensor6 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.6")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:7-I")
+{
+	field (DESC, "Sensor7 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.7")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:7-SP")
+{
+	field (DESC, "Sensor7 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.7")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:7-RB")
+{
+	field (DESC, "Sensor7 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.7")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:7-SP")
+{
+	field (DESC, "Sensor7 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.7")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:7-RB")
+{
+	field (DESC, "Sensor7 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.7")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorNumber: the number of temperature sensors of the crate
+record (longin,"$(SYS){$(D)-Sensor}SensorNum-I")
+{
+	field (DESC, "Sensor Number")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorNumber.0")
+        field (PINI,"1")
+}
+
+# sensorTemperature: the measured temperature of the sensor
+record (longin,"$(SYS){$(D)-Sensor}Temp:8-I")
+{
+	field (DESC, "Sensor8 Temp")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorTemperature.8")
+        field (SCAN,"2 second")
+        field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# sensorWarningThreshold: if the measured temperature of the sensor is higher than this value, the fan speed of the connected fan tray is increased
+record (longout,"$(SYS){$(D)-Sensor}WT:8-SP")
+{
+	field (DESC, "Sensor8 WarningT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.8")
+}
+
+
+record (longin,"$(SYS){$(D)-Sensor}WT:8-RB")
+{
+	field (DESC, "Sensor8 WarningT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorWarningThreshold.8")
+        field (PINI,"1")
+        field (SCAN,"10 second")
+}
+
+# sensorFailureThreshold: if the measured temperature of the sensor is higher than this value, the power supply switch off
+record (longout,"$(SYS){$(D)-Sensor}FT:8-SP")
+{
+	field (DESC, "Sensor8 FailureT Set")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.8")
+}
+
+record (longin,"$(SYS){$(D)-Sensor}FT:8-RB")
+{
+	field (DESC, "Sensor8 FailureT")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::sensorFailureThreshold.8")
+        field (PINI,"1")
+        field (SCAN,"10 second") 
+}
+
+record (calc,"$(SYS){$(D)-Sensor}Temp:MAX-I")
+{
+	field (DESC, "Calculate Maximum Temperature")
+	field (EGU,  "C")
+	field (SCAN, "10 second")
+	field (INPA, "$(SYS){$(D)-Sensor}Temp:1-I")
+	field (INPB, "$(SYS){$(D)-Sensor}Temp:2-I")
+	field (INPC, "$(SYS){$(D)-Sensor}Temp:3-I")
+	field (INPD, "$(SYS){$(D)-Sensor}Temp:4-I")
+	field (INPE, "$(SYS){$(D)-Sensor}Temp:5-I")
+	field (INPF, "$(SYS){$(D)-Sensor}Temp:6-I")
+	field (INPG, "$(SYS){$(D)-Sensor}Temp:7-I")
+	field (INPH, "$(SYS){$(D)-Sensor}Temp:8-I")
+	field (CALC, "MAX(A,B,C,D,E,F,G,H)")
+	field (ADEL, "1")
+	field (HIGH, "40")
+	field (HIHI, "50")
+	field (HSV,  "MINOR")
+	field (HHSV, "MAJOR")
+}
+
+# fanOperatingTime: the time in seconds for how long the fan tray was switched on
+record (longin,"$(SYS){$(D)-Fan}Time-I")
+{
+	field (DESC, "Fan Operating Time")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::fanOperatingTime.0")
+        field (SCAN,"10 second")
+	field (EGU , "s")
+}
+
+# fanNominalSpeed: the nominal fan rotation speed(RPM, Revolution Per Minute)
+record (longout,"$(SYS){$(D)-Fan}Speed-SP")
+{
+	field (DESC, "Set Fan Nominal Speed")
+	field (DTYP,"Snmp")
+        field (OUT,"@$(IP,recursive) admin WIENER-CRATE-MIB::fanNominalSpeed.0")
+}
+
+record (longin,"$(SYS){$(D)-Fan}Speed-RB")
+{
+	field (DESC, "Fan Nominal Speed")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::fanNominalSpeed.0")
+	field (PINI, "1")
+        field (SCAN,"10 second")      
+}
+
+# fanSpeed: the measured fan rotation speed(RPM, Revolution Per Minute)
+record (longin,"$(SYS){$(D)-Fan}Speed-I")
+{
+	field (DESC, "Fan Speed")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::fanSpeed.1")
+        field (SCAN,"10 second")
+	field (ADEL,"200")
+	field (HIGH,"5000")
+	field (HSV ,"INVALID")
+ 	field (LOW ,"2000")
+	field (LSV ,"MINOR")
+	field (LOLO,"1000")
+	field (LLSV,"MAJOR")
+}
+
+
+# psOperatingTime: the time in seconds for how long the power supply was switched on
+record (longin,"$(SYS){$(D)-PS}OpTime-I")
+{
+	field (DESC, "PS Operating Time")
+	field (DTYP,"Snmp")
+        field (INP,"@$(IP,recursive) admin WIENER-CRATE-MIB::psOperatingTime.0")
+        field (SCAN,"10 second")
+	field (EGU , "s")
+}

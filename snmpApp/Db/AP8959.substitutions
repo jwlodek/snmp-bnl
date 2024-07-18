@@ -1,0 +1,41 @@
+file apcPdu_all_port.template
+{
+  pattern {  C , MaxCurrent , WarnCurrent, LimitCurrent , MaxPower , WarnPower , LimitPower }
+  {  private , 16 , 12 , 20, 3328, 2496, 4200 }
+}
+
+file apcPdu_voltage2.template
+{
+  pattern { C }
+  { private }
+}
+
+file apcPdu_single_port.template
+{
+  pattern { C, CHAN, ONAME }
+  {  private , 1 , "Outlet 1" }	
+  {  private , 2 , "Outlet 2" }
+  {  private , 3 , "Outlet 3" }
+  {  private , 4 , "Outlet 4" }
+  {  private , 5 , "Outlet 5" }
+  {  private , 6 , "Outlet 6" }
+  {  private , 7 , "Outlet 7" }
+  {  private , 8 , "Outlet 8" }
+  {  private , 9 , "Outlet 9" }
+  {  private , 10, "Outlet 10" }
+  {  private , 11, "Outlet 11" }
+  {  private , 12, "Outlet 12" }
+  {  private , 13, "Outlet 13" }
+  {  private , 14, "Outlet 14" }
+  {  private , 15, "Outlet 15" }
+  {  private , 16, "Outlet 16" }
+  {  private , 17, "Outlet 17" }
+  {  private , 18, "Outlet 18" }
+  {  private , 19, "Outlet 19" }
+  {  private , 20, "Outlet 20" }
+  {  private , 21, "Outlet 21" }
+  {  private , 22, "Outlet 22" }
+  {  private , 23, "Outlet 23" }
+  {  private , 24, "Outlet 24" }
+}
+

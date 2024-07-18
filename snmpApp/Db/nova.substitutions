@@ -1,0 +1,5 @@
+file nova.template
+{
+   pattern {  P   	 , C,      IP        	 , MIB	      , SLOWRATE}
+           {  novaCrate: , public, "10.0.131.22" , SNMPv2-SMI , "5 second"}
+}

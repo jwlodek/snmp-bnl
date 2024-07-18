@@ -1,0 +1,160 @@
+# Database for APC PDU
+
+record(ai,"$(SYS)$(DEV)I-I_")
+{
+	field(DTYP,"Snmp")
+	field(INP ,"@$(IP) $(C) PowerNet-MIB::rPDULoadStatusLoad.1 Gauge32: 100")
+	field(SCAN,"1 second")
+	field(FLNK,"$(SYS)$(DEV)I-I")
+}
+
+record(calc,"$(SYS)$(DEV)I-I")
+{
+	field(INPA, "$(SYS)$(DEV)I-I_")
+	field(DESC, "Load (Current)")
+	field(CALC, "A*0.1")
+	field(EGU , "Amps")
+	field(HIGH, "$(WarnCurrent)")
+	field(HIHI, "$(MaxCurrent)")
+	field(HHSV, "MAJOR")
+	field(HSV,  "MINOR")
+	field(HOPR, "$(LimitCurrent)")
+	field(LOPR, "0")
+}
+
+record(longin, "$(SYS)$(DEV)I:Max-RB")
+{
+	field(DTYP,"Snmp")
+	field(INP ,"@$(IP) $(C) PowerNet-MIB::rPDULoadPhaseConfigOverloadThreshold.phase1 INTERGER: 100") 
+	field(SCAN,"5 second")
+}
+
+record(longout, "$(SYS)$(DEV)I:Max-SP")
+{
+    field(DTYP,"Snmp")
+	#field(OUT ,"@$(IP) $(C) .1.3.6.1.4.1.318.1.1.12.2.2.1.1.4.1 INTEGER: 100")
+	field(OUT ,"@$(IP) $(C) .1.3.6.1.4.1.318.1.1.12.2.2.1.1.4.1 ( 100 i")
+	field(VAL ,"$(MaxCurrent)")
+	field(SCAN, "Passive")
+	field(PINI,"1")
+	field(FLNK,"$(SYS)$(DEV)I:Max-RB")
+	info(autosaveFields, "VAL")
+}
+
+record(longin, "$(SYS)$(DEV)I:Warn-RB")
+{
+	field(DTYP,"Snmp")
+	field(INP ,"@$(IP) $(C) PowerNet-MIB::rPDULoadPhaseConfigNearOverloadThreshold.phase1 INTEGER: 100")
+	field(SCAN,"5 second")
+}
+
+record(longout, "$(SYS)$(DEV)I:Warn-SP")
+{
+    field(DTYP,"Snmp")
+    #field(OUT ,"@$(IP) $(C) .1.3.6.1.4.1.318.1.1.12.2.2.1.1.3.1 INTEGER: 100")
+    field(OUT ,"@$(IP) $(C) .1.3.6.1.4.1.318.1.1.12.2.2.1.1.3.1 ( 100 i")
+	field(VAL ,"$(WarnCurrent)")
+	field(PINI,"1")
+	field(FLNK,"$(SYS)$(DEV)I:Warn-RB")
+	info(autosaveFields, "VAL")
+}       
+
+record(longin, "$(SYS)$(DEV)Pwr-Sts_")
+{
+	field(DTYP,"Snmp")
+	field(INP ,"@$(IP) $(C) PowerNet-MIB::rPDULoadStatusLoadState.1 ( 100")
+	field(SCAN,"1 second")
+	field(FLNK,"$(SYS)$(DEV)Pwr-Sts")
+}
+
+record(mbbi,"$(SYS)$(DEV)Pwr-Sts")
+{
+	field(DESC,"Load Status")
+	field(INP, "$(SYS)$(DEV)Pwr-Sts_")
+	field(ONST,"Normal")
+	field(TWST,"Low")
+	field(THST,"NearOverload")
+	field(FRST,"Overload")
+	field(ONSV,"NO_ALARM")
+	field(TWSV,"NO_ALARM")
+	field(THSV,"MINOR")
+	field(FRST,"MAJOR")
+}
+
+record(ai,"$(SYS)$(DEV)Pwr-I")
+{
+	field(DESC,"Load (Power)")
+	field(DTYP,"Snmp")
+	field(INP,"@$(IP) $(C) PowerNet-MIB::rPDUIdentDevicePowerWatts.0 INTEGER: 100")
+	field(SCAN,"1 second")
+	field(EGU, "Watts")
+	field(LOPR,"0")
+	field(HOPR,"$(LimitPower)")
+	field(HIGH,"$(WarnPower)")
+	field(HIHI,"$(MaxPower)")
+	field(HHSV, "MAJOR")
+	field(HSV,  "MINOR")
+}
+
+# Master Switch Status
+
+record(mbbo, "$(SYS)$(DEV)Sw:All-Sel")
+{
+	field(DESC, "Set All Outlets Mode")
+	field(ZRST, "Off")
+	field(ONST, "On")
+	field(TWST, "On Sequence")
+	field(THST, "Reboot")
+	field(FRST, "Reboot Sequence")
+	field(FVST, "Off Sequence")
+	field(SXST, "No Command")
+	field(ZRVL, "3")
+	field(ONVL, "1")
+	field(TWVL, "2")
+	field(THVL, "4")
+	field(FRVL, "5")
+	field(FVVL, "7")
+	field(SXVL, "6")
+	field(FLNK,  "$(SYS)$(DEV)Sw:All-SP")
+}
+
+record (longout,"$(SYS)$(DEV)Sw:All-SP")
+{
+	field(DESC, "Setting Outlet State")
+	field(DTYP, "Snmp")
+	field(DOL,  "$(SYS)$(DEV)Sw:All-Sel.RVAL")
+	field(OMSL, "closed_loop")
+	field(SCAN, "Passive")
+	field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUMasterControlSwitch.0 ( 100")
+	#field(FLNK, "$(SYS)$(DEV)Sw:All-RB")
+}
+
+#record (longin,"$(SYS)$(DEV)Sw:All-RB")
+#{
+#    field(DESC, "Setting Outlet State Readback")
+#    field(DTYP, "Snmp")
+#    field(SCAN, "1 second")
+#    field(INP,  "@$(IP) $(C) PowerNet-MIB::sPDUMasterControlSwitch.0")
+#	 field(FLNK, "$(SYS)$(DEV)Sw:All-Sts")
+#}
+
+#record(mbbi, "$(SYS)$(DEV)Sw:All-Sts")
+#{
+#    field(DESC, "All Outlets Mode")
+#	 field(INP,  "$(SYS)$(DEV)Sw:All-RB")
+#	 field(DTYP, "Raw Soft Channel")
+#    field(ZRST, "Off")
+#    field(ONST, "On")
+#    field(TWST, "On Sequence")
+#    field(THST, "Reboot")
+#    field(FRST, "Reboot Sequence")
+#    field(FVST, "Off Sequence")
+#	 field(SXST, "No Command")
+#    field(ZRVL, "2")
+#    field(ONVL, "3")
+#    field(TWVL, "1")
+#    field(THVL, "4")
+#    field(FRVL, "5")
+#    field(FVVL, "7")
+#	 field(SXVL, "6")
+#}

@@ -1,0 +1,41 @@
+file wiener_system.template
+{
+   pattern { P   	          , IP             , MIB,            , SLOWRATE  , FASTRATE}
+           { "$(SYS){$(D)-System}", "$(IP)" , WIENER-CRATE-MIB, "5 second", "1 second" }
+}
+
+file wiener_output.template
+{
+   pattern {  P   	             , IP             , MIB	         , CHAN , channel, SLOWRATE  , FASTRATE}
+           {  "$(SYS){$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 1	, u0	 , "5 second", "1 second"}
+           {  "$(SYS){$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 2	, u1	 , "5 second", "1 second"}
+           {  "$(SYS){$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 3	, u5	 , "5 second", "1 second"}
+           {  "$(SYS){$(D)-Output}"  , "$(IP)" , WIENER-CRATE-MIB , 4	, u3	 , "5 second", "1 second"}
+
+}
+
+file wiener_sensor.template
+{
+   pattern {  P   	             , IP             , MIB	         , SNUM	, SLOWRATE  , FASTRATE}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 1	, "5 second", "1 second"}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 2	, "5 second", "1 second"}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 3	, "5 second", "1 second"}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 4	, "5 second", "1 second"}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 5	, "5 second", "1 second"}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 6	, "5 second", "1 second"}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 7	, "5 second", "1 second"}
+           {  "$(SYS){$(D)-Sensor}"  , "$(IP)" , WIENER-CRATE-MIB , 8	, "5 second", "1 second"}
+}
+
+file wiener_fan.template
+{
+   pattern {  P   	         , IP        	  , MIB		     , SLOWRATE  , FASTRATE}
+           {  "$(SYS){$(D)-Fan}" , "$(IP)" , WIENER-CRATE-MIB , "5 second", "1 second"}
+}
+
+file wiener_ps.template
+{
+   pattern {  P   	         , IP        	  , MIB		     , SLOWRATE , FASTRATE}
+           {  "$(SYS){$(D)-PS}" , "$(IP)" , WIENER-CRATE-MIB , "5 second", "1 second"}
+}
+

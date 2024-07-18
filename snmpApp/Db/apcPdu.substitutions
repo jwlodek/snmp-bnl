@@ -1,0 +1,62 @@
+file apcPdu_snmp.template
+{
+   pattern {  P,        C,      IP,           N}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 1}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 2}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 3}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 4}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 5}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 6}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 7}
+           {  "INJ-CS{ApcPdu:Q4}", private, 10.0.144.14, 8}
+}
+
+file apcPdu_temp.template
+{
+   { P="INJ-CS{ApcPdu:Q4}",
+     TEMP1="LN-BI{BPM:1}Temp:AfeSense0-I",TEMP2="LN-BI{BPM:2}Temp:AfeSense0-I",
+     TEMP3="LN-BI{BPM:3}Temp:AfeSense0-I",TEMP4="LN-BI{BPM:4}Temp:AfeSense0-I",
+     TEMP5="LN-BI{BPM:5}Temp:AfeSense0-I",TEMP6="LTB-BI{BPM:1}Temp:AfeSense0-I",
+     TEMP7="LTB-BI{BPM:2}Temp:AfeSense0-I",TEMP8="LTB-BI{BPM:3}Temp:AfeSense0-I" }
+}
+
+file apcPdu_snmp.template
+{
+   pattern {  P,        C,      IP,           N}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 1}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 2}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 3}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 4}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 5}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 6}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 7}
+           {  "INJ-CS{ApcPdu:N}", private, 10.0.144.15, 8}
+}
+
+#Yong: 10.0.144.16 at RGQ2
+file apcPdu_snmp.template
+{
+   pattern {  P,        C,      IP,           N}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 1}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 2}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 3}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 4}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 5}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 6}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 7}
+           {  "INJ-CS{ApcPdu:RGQ2}", private, 10.0.144.16, 8}
+}
+
+#Yong: 10.0.144.22 at RGA2
+file apcPdu_snmp.template
+{
+   pattern {  P,        C,      IP,           N}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 1}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 2}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 3}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 4}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 5}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 6}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 7}
+           {  "INJ-CS{ApcPdu:RGA2}", private, 10.0.144.22, 8}
+}

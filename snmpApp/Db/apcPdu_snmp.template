@@ -1,0 +1,90 @@
+record(stringout, "$(P)DB:Outlet$(N)Name-SP")
+{
+	field(DESC, "Set Outlet$(N) Name")
+	field(PINI, "YES")
+	field(VAL,  "Outlet $(N)")
+	field(UDF, "0")
+	field(FLNK, "$(P)DB:Outlet$(N)Name-RB")
+	info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)DB:Outlet$(N)Name-RB")
+{
+	field(DESC, "Outlet$(N) Name")
+	field(INP, "$(P)DB:Outlet$(N)Name-SP")    
+}
+
+
+record(mbbo, "$(P)DB:OutletCmd-Sel")
+{
+	field(DESC, "Outlet Sel")
+	field(ZRST, "On")
+	field(ONST, "Off")
+	field(TWST, "Reboot")
+	field(ZRVL, "1")
+	field(ONVL, "2")
+	field(TWVL, "3")
+	field(PINI, "YES")
+	field(VAL,  "1")
+}
+
+record(dfanout, "$(P)DB:OutletCmd-DFOut_")
+{
+	field(DESC, "Outlet Cmd DFOut")
+	field(OMSL, "closed_loop")
+	field(DOL,  "$(P)DB:OutletCmd-Sel.RVAL")
+	field(OUTA, "$(P)Cmd:Outlet1-SP PP")
+	field(OUTB, "$(P)Cmd:Outlet2-SP PP")
+	field(OUTC, "$(P)Cmd:Outlet3-SP PP")
+	field(OUTD, "$(P)Cmd:Outlet4-SP PP")
+	field(OUTE, "$(P)Cmd:Outlet5-SP PP")
+	field(OUTF, "$(P)Cmd:Outlet6-SP PP")
+	field(OUTG, "$(P)Cmd:Outlet7-SP PP")
+	field(OUTH, "$(P)Cmd:Outlet8-SP PP")
+}
+
+record(mbbo, "$(P)Cmd:Outlet$(N)-Sel")
+{
+	field(DESC, "Outlet$(N) Sel")
+	field(OUT,  "$(P)Cmd:Outlet$(N)-SP PP")
+	field(DTYP, "Raw Soft Channel")
+	field(ZRST, "On")
+	field(ONST, "Off")
+	field(TWST, "Reboot")
+	field(ZRVL, "1")
+	field(ONVL, "2")
+	field(TWVL, "3")
+}
+
+record (longout,"$(P)Cmd:Outlet$(N)-SP")
+{
+	field(DESC, "Raw Outlet$(N) Sel")
+	field(DESC, "Setting the outlet state")
+	field(DTYP, "Snmp")
+	#field(OUT,  "@$(IP) $(C) INTEGER: 128 i")
+	field(OUT,  "@$(IP) $(C) ( 128 i")
+	info (OID,  "1.3.6.1.4.1.318.1.1.12.3.3.1.1.4.$(N)")
+}
+
+record (longin,"$(P)Sts:Outlet$(N)-RB")
+{
+	field(DESC, "Raw Outlet$(N) Stat")
+	field(DTYP, "Snmp")
+	field(INP,  "@$(IP) $(C) INTEGER: 128")
+	field(SCAN, "1 second")
+	field(FLNK, "$(P)Sts:Outlet$(N)-Sts")
+	info (OID,  "1.3.6.1.4.1.318.1.1.12.3.3.1.1.4.$(N)")
+}
+
+record(mbbi, "$(P)Sts:Outlet$(N)-Sts")
+{
+	field(DESC, "Outlet$(N) Stat")
+	field(INP, "$(P)Sts:Outlet$(N)-RB")
+	field(DTYP, "Raw Soft Channel")
+	field(ZRST, "On")
+	field(ONST, "Off")
+	field(TWST, "Reboot")
+	field(ZRVL, "1")
+	field(ONVL, "2")
+	field(TWVL, "3")
+}

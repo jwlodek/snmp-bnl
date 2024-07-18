@@ -1,0 +1,165 @@
+# Main switch
+record (bo, "$(P)MainSwitch-Sel") {
+	field(DESC, "Main Switch Set")
+	field( ZNAM, "Off")
+	field( ONAM, "On")
+	field( OUT, "$(P)MainSwitch-SP_ PP")
+}
+
+record (longout,"$(P)MainSwitch-SP_")
+{
+	field (DESC, "Main Switch RSet")
+	field (DTYP, "Snmp")
+	#field (OUT,  "@$(IP) admin INTEGER: 128 i")
+	field (OUT,  "@$(IP) admin ( 128 i")
+	field (HOPR, "1")
+	field (LOPR, "0")
+	info (OID, "$(MIB)::sysMainSwitch.0")
+}
+
+record (longin,"$(P)MainSwitch-RB_")
+{
+	field (DESC, "Main Switch RValue")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) admin ( 128")
+	field (SCAN,"$(SLOWRATE)")
+	field (FLNK, "$(P)MainSwitch-RB")
+	info (OID, "$(MIB)::sysMainSwitch.0")
+}
+
+record (bi, "$(P)MainSwitch-RB") {
+	field (DESC, "Main Switch Value")
+	field (INP,  "$(P)MainSwitch-RB_")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+}
+
+# VME reset
+record (longout,"$(P)VmeReset-Cmd")
+{
+	field (DESC, "VME Reset")
+	field (DTYP, "Snmp")
+	#field (OUT,  "@$(IP) admin INTEGER: 128 i")
+	field (OUT,  "@$(IP) admin ( 128 i")
+	field (SCAN, "Passive")
+	info (OID, "$(MIB)::sysVmeSysReset.0")
+}
+
+# System status
+record (mbbiDirect,"$(P)Status-I")
+{
+	field (DESC, "System RStatus")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) public BITS: 128")
+	field (SCAN, "$(SLOWRATE)")
+	field (NOBT, "16")	
+	field (FLNK, "$(P)Status-Sts")
+	info (OID, "$(MIB)::sysStatus.0")
+}
+
+record (calc,"$(P)Status-Sts")
+{
+	field (DESC, "System Status")
+	field (INPA, "$(P)Status-I")
+	field (INPB, "0x8000")
+	field (CALC, "(A==B)?0:A")
+	field (HIGH, "1")
+	field (HSV,  "MAJOR")
+	field (ADEL, "0")
+	field (FLNK, "$(P)Mainon-Sts")
+}
+
+record (bi,"$(P)Mainon-Sts")
+{
+	field (DESC, "mainOn (0)")
+	field (INP,  "$(P)Status-I.BF")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (FLNK, "$(P)Exinhibit-Sts")
+}
+
+record (bi,"$(P)Exinhibit-Sts")
+{
+	field (DESC, "mainInhibit(1)")
+	field (INP,  "$(P)Status-I.BE")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (FLNK, "$(P)Localonly-Sts")
+}
+
+record (bi,"$(P)Localonly-Sts")
+{
+	field (DESC, "localControlOnly (2)")
+	field (INP,  "$(P)Status-I.BD")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (FLNK, "$(P)Pwr-Sts")
+}
+
+record (bi,"$(P)Pwr-Sts")
+{
+	field (DESC, "inputFailure (3)")
+	field (INP,  "$(P)Status-I.BC")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MAJOR")
+	field (FLNK, "$(P)Output-Sts")
+}
+
+record (bi,"$(P)Output-Sts")
+{
+	field (DESC, "outputFailure (4)")
+	field (INP,  "$(P)Status-I.BB")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MAJOR")
+	field (FLNK, "$(P)Fan-Sts")
+}
+
+record (bi,"$(P)Fan-Sts")
+{
+	field (DESC, "fantrayFailure (5)")
+	field (INP,  "$(P)Status-I.BA")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+	field (FLNK, "$(P)Sensor-Sts")
+}
+
+record (bi,"$(P)Sensor-Sts")
+{
+	field (DESC, "sensorFailure (6)")
+	field (INP,  "$(P)Status-I.B9")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+	field (FLNK, "$(P)Vmesys-Sts")
+}
+
+record (bi,"$(P)Vmesys-Sts")
+{
+	field (DESC, "VmeSysfail(7)")
+	field (INP,  "$(P)Status-I.B8")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+	field (FLNK, "$(P)Plugplay-Sts")
+}
+
+record (bi,"$(P)Plugplay-Sts")
+{
+	field (DESC, "plugAndPlayIncompatible (8)")
+	field (INP,  "$(P)Status-I.B7")
+	field (ZNAM, "Off")
+	field (ONAM, "On")
+	field (OSV,  "MINOR")
+}
+
+record (longin,"$(P)SysOperatingTime-I")
+{
+	field (DESC, "System Operating Time")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) admin INTEGER: 128")
+	field (SCAN, "1 second")
+	info (OID, "$(MIB)::sysOperatingTime.0")
+}

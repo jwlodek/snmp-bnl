@@ -1,0 +1,67 @@
+record(sub, "$(P)DB:Alrm-Sub_")
+{
+	field(DESC, "Alarm Calc")
+	field(INPA, "$(TEMP1).SEVR")
+	field(INPB, "$(TEMP2).SEVR")
+	field(INPC, "$(TEMP3).SEVR")
+	field(INPD, "$(TEMP4).SEVR")
+	field(INPE, "$(TEMP5).SEVR")
+	field(INPF, "$(TEMP6).SEVR")
+	field(INPG, "$(TEMP7).SEVR")
+	field(INPH, "$(TEMP8).SEVR")
+	field(SNAM, "CalcAlarm")
+}
+
+record(mbbi, "$(P)DB:Alrm-Sts")
+{
+	field(DESC, "Severity")
+	field(SCAN, "1 second")
+	field(INP,  "$(P)DB:Alrm-Sub_ PP MSS")
+	field(ZRST, "No Alarm")
+	field(ONST, "Minor Alarm")
+	field(TWST, "Major Alarm")
+	field(THST, "Invalid Alarm")
+	field(FLNK, "$(P)DB:Trig-Calc_")
+	field(ZRSV, "NO_ALARM")
+	field(ONSV, "MINOR")
+	field(TWSV, "MAJOR")
+	field(THSV, "INVALID")
+}
+
+record(calcout, "$(P)DB:Trig-Calc_")
+{
+	field(DESC, "Alarm Trig")
+	field(INPA, "$(P)DB:Alrm-Sts")
+	field(CALC, "A=2")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use CALC")
+	field(OUT,  "$(P)DB:OutletCmd-DFOut_.PROC")
+}
+
+record(dfanout, "$(P)DB:T_Warn-DFOut_")
+{
+	field(DESC, "T Warn DFOut")
+	field(OMSL, "supervisory")
+	field(OUTA, "$(TEMP1).HIGH")
+	field(OUTB, "$(TEMP2).HIGH")
+	field(OUTC, "$(TEMP3).HIGH")
+	field(OUTD, "$(TEMP4).HIGH")
+	field(OUTE, "$(TEMP5).HIGH")
+	field(OUTF, "$(TEMP6).HIGH")
+	field(OUTG, "$(TEMP7).HIGH")
+	field(OUTH, "$(TEMP8).HIGH")
+}
+
+record(dfanout, "$(P)DB:T_Alrm-DFOut_")
+{
+        field(DESC, "T Alarm DFOut")
+        field(OMSL, "supervisory")
+        field(OUTA, "$(TEMP1).HIHI")
+        field(OUTB, "$(TEMP2).HIHI")
+        field(OUTC, "$(TEMP3).HIHI")
+        field(OUTD, "$(TEMP4).HIHI")
+        field(OUTE, "$(TEMP5).HIHI")
+        field(OUTF, "$(TEMP6).HIHI")
+        field(OUTG, "$(TEMP7).HIHI")
+        field(OUTH, "$(TEMP8).HIHI")
+}

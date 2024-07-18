@@ -1,0 +1,425 @@
+######################################
+#         Community String           #
+######################################
+
+record (stringout,"$(P)readCommunity")
+{
+	field (DESC, "Read Community string")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) $(C) STRING: 128 s")
+	field (FLNK, "$(P)readCommunity:RB")
+	info (OID, "$(MIB)::enterprises.27358.1.0")	
+}
+
+record (stringin,"$(P)readCommunity:RB")
+{
+	field (DESC, "Read Community string")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) STRING: 128")
+	info (OID, "$(MIB)::enterprises.27358.1.0")
+}
+
+record (stringout,"$(P)writeCommunity")
+{
+	field (DESC, "Write Community string")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) $(C) STRING: 128 s")
+	field (FLNK, "$(P)writeCommunity:RB")
+	info (OID, "$(MIB)::enterprises.27358.2.0")
+}
+
+record (stringin,"$(P)writeCommunity:RB")
+{
+	field (DESC, "Write Community string")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) STRING: 128")
+	info (OID, "$(MIB)::enterprises.27358.2.0")
+}
+
+######################################
+#         SEM Identification         #
+######################################
+
+record (stringin,"$(P)manufacturer")
+{
+	field (DESC, "The name of the SEM manufacturer")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) STRING: 128")
+	field (SCAN, "$(SLOWRATE)")
+	info (OID, "$(MIB)::enterprises.27358.33.1.1.1.0")
+	
+}
+
+record (stringin,"$(P)designation")
+{
+	field (DESC, "The SEM Model designation")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) STRING: 128")
+	field (SCAN, "$(SLOWRATE)")
+	info (OID, "$(MIB)::enterprises.27358.33.1.1.2.0")
+}
+
+record (stringin,"$(P)version")
+{
+	field (DESC, "The SEM firmware/software version")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) STRING: 128")
+	field (SCAN, "$(SLOWRATE)")
+	info (OID, "$(MIB)::enterprises.27358.33.1.1.3.0")
+}
+
+record (stringin,"$(P)serialNumber")
+{
+	field (DESC, "The SEM Serial Number")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) STRING: 128")
+	field (SCAN, "$(SLOWRATE)")
+	info (OID, "$(MIB)::enterprises.27358.33.1.1.4.0")
+}
+
+record (stringout,"$(P)name")
+{
+	field (DESC, "A string identifying the SEM")
+	field (DTYP,"Snmp")
+	field (OUT,"@$(IP) $(C) STRING: 128 s")
+	field (FLNK, "$(P)name:RB")
+	info (OID, "$(MIB)::enterprises.27358.33.1.1.5.0")
+}
+
+record (stringin,"$(P)name:RB")
+{
+	field (DESC, "A string identifying the SEM")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) STRING: 128")
+	info (OID, "$(MIB)::enterprises.27358.33.1.1.5.0")
+}
+
+######################################
+#         Power Supply Status        #
+######################################
+
+record (longin,"$(P)5Volts:Raw")
+{
+	field (DESC, "5 Volts")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (HIHI, "525")
+	field (LOLO, "485")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.2.1.0")
+}
+
+record (calc,"$(P)5Volts")
+{
+	field (DESC, "5 Volts")
+	field (INPA, "$(P)5Volts:Raw PP MS")
+	field (INPB, "0.01")
+	field (CALC, "A*B")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "Volts")
+}
+
+record (longin,"$(P)plus12Volts:Raw")
+{
+	field (DESC, "Plus 12 Volts")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (HIHI, "1260")
+	field (LOLO, "1140")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.2.2.0")
+}
+
+record (calc,"$(P)plus12Volts")
+{
+	field (DESC, "Plus 12 Volts")
+	field (INPA, "$(P)plus12Volts:Raw PP MS")
+	field (INPB, "0.01")
+	field (CALC, "A*B")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "Volts")
+}
+
+record (longin,"$(P)minus12Volts:Raw")
+{
+	field (DESC, "Minus 12 Volts")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (HIHI, "-1140")
+	field (LOLO, "-1260")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.2.3.0")
+}
+
+record (calc,"$(P)minus12Volts")
+{
+	field (DESC, "Minus 12 Volts")
+	field (INPA, "$(P)minus12Volts:Raw PP MS")
+	field (INPB, "0.01")
+	field (CALC, "A*B")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "Volts")
+}
+
+record (longin,"$(P)3:3Volts:Raw")
+{
+	field (DESC, "3:3 Volts")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (HIHI, "350")
+	field (LOLO, "310")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.2.4.0")
+}
+
+record (calc,"$(P)3:3Volts")
+{
+	field (DESC, "3.3 Volts")
+	field (INPA, "$(P)3:3Volts:Raw PP NMS")
+	field (INPB, "0.01")
+	field (CALC, "A*B")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "Volts")
+}
+
+######################################
+#         Temperature Status         #
+######################################
+
+record (longin,"$(P)t1Temp:Raw")
+{
+	field (DESC, "The temperature at T1")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (HIHI, "270")
+	field (LOLO, "200")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.3.1.0")
+}
+
+record (calc,"$(P)t1Temp")
+{
+	field (DESC, "The temperature at T1 in degree C")
+	field (INPA, "$(P)t1Temp:Raw PP MS")
+	field (INPB, "0.1")
+	field (CALC, "A*B")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "Degree C")
+}
+
+record (longin,"$(P)t2Temp:Raw")
+{
+	field (DESC, "The temperature at T2")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (HIHI, "270")
+	field (LOLO, "200")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.3.2.0")
+}
+
+record (calc,"$(P)t2Temp")
+{
+	field (DESC, "The temperature at T3 in degree C")
+	field (INPA, "$(P)t2Temp:Raw PP MS")
+	field (INPB, "0.1")
+	field (CALC, "A*B")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "Degree C")
+}
+
+record (longin,"$(P)t3Temp:Raw")
+{
+	field (DESC, "The temperature at T3")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (HIHI, "270")
+	field (LOLO, "200")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.3.3.0")
+}
+
+record (calc,"$(P)t3Temp")
+{
+	field (DESC, "The temperature at T3 in degree C")
+	field (INPA, "$(P)t3Temp:Raw PP MS")
+	field (INPB, "0.1")
+	field (CALC, "A*B")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "Degree C")
+}
+
+######################################
+#             Fan Status             #
+######################################
+
+record (longin,"$(P)fan1Speed")
+{
+	field (DESC, "The Speed of Fan1 in RPM")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "RPM")
+	field (HIHI, "2100")
+	field (LOLO, "1700")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.4.1.0")
+}
+
+record (longin,"$(P)fan2Speed")
+{
+	field (DESC, "The Speed of Fan2 in RPM")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (SCAN, "$(SLOWRATE)")
+	field (EGU,  "RPM")
+	field (HIHI, "2100")
+	field (LOLO, "1700")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.4.2.0")
+}
+
+record (longin,"$(P)fan3Speed")
+{
+	field (DESC, "The Speed of Fan3 in RPM")
+	field (DTYP, "Snmp")
+	field (INP,  "@$(IP) $(C) INTEGER: 128")
+	field (SCAN, "$(SLOWRATE)") 
+	field (EGU,  "RPM")
+	field (HIHI, "2100")
+	field (LOLO, "1700")
+	field (HHSV, "MAJOR")
+	field (LLSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.4.3.0")
+}
+
+
+######################################
+#            Alarm Status            #
+######################################
+
+record (stringin,"$(P)alarmDescription")
+{
+	field (DESC, "Description of the current alarm")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) STRING: 128")
+	field (SCAN, "$(SLOWRATE)")
+	info (OID, "$(MIB)::enterprises.27358.33.1.5.1.0") 
+}
+
+record (longin,"$(P)alarmVoltage")
+{
+	field (DESC, "Voltage Alarm status")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) INTEGER: 128")
+	field (SCAN, "$(SLOWRATE)") 
+	field (HIHI, "1")
+	field (HHSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.5.2.0")
+}
+
+record (longin,"$(P)alarmTemp")
+{
+	field (DESC, "Temperature Alarm status")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) INTEGER: 128")
+	field (SCAN, "$(SLOWRATE)")
+	field (HIHI, "1")
+	field (HHSV, "MAJOR")
+	info (OID, "$(MIB)::enterprises.27358.33.1.5.3.0")
+}
+
+record (longin,"$(P)alarmFan")
+{
+	field (DESC, "Fan Alarm status")
+	field (DTYP,"Snmp")
+	field (INP,"@$(IP) $(C) INTEGER: 128")
+	field (SCAN, "$(SLOWRATE)")
+	field (HIHI, "1")
+	field (HHSV, "MAJOR") 
+	info (OID, "$(MIB)::enterprises.27358.33.1.5.4.0")
+}
+
+######################################
+#             Controls               #
+######################################
+
+record (longout,"$(P)mainSwitch")
+{
+	field (DESC, "Turns the Power Supply ON/OFF")
+	field (DTYP, "Snmp")
+	#field (OUT,  "@$(IP) $(C) INTEGER: 128 i")
+	field (OUT,  "@$(IP) $(C) ( 128 i")
+	field (HOPR, "1")
+	field (LOPR, "0")
+	field (PINI, "YES")
+	field (VAL, 1)
+	info (OID, "$(MIB)::enterprises.27358.33.1.9.1.0")
+}
+
+record (longout,"$(P)battleShort")
+{
+	field (DESC, "Indicates the status of Battleshort")
+	field (DTYP, "Snmp")
+	field (OUT,  "@$(IP) $(C) INTEGER: 128 i")
+	field (HOPR, "1")
+	field (LOPR, "0")
+	info (OID, "$(MIB)::enterprises.27358.33.1.9.2.0")
+}
+
+record (longout,"$(P)reset")
+{
+	field (DESC, "Main Switch Reset")
+	field (DTYP, "Snmp")
+	field (OUT,  "@$(IP) $(C) INTEGER: 128 i")
+	info (OID, "$(MIB)::enterprises.27358.33.1.9.3.0")
+}
+
+######################################
+#         Trap Configuration         #
+######################################
+
+record (longout,"$(P)trapOnVoltageAlarm")
+{
+	field (DESC, "Trap will be sent on a Voltage Alarm")
+	field (DTYP, "Snmp")
+	field (OUT,  "@$(IP) $(C) INTEGER: 128 i")
+	field (HOPR, "1")
+	field (LOPR, "0")
+	field (PINI, "YES")
+	field (VAL, 1)
+	info (OID, "$(MIB)::enterprises.27358.33.1.6.1.0")
+}
+
+record (longout,"$(P)trapOnTempAlarm")
+{
+	field (DESC, "Trap will be sent on a Temp Alarm")
+	field (DTYP, "Snmp")
+	field (OUT,  "@$(IP) $(C) INTEGER: 128 i")
+	field (HOPR, "1")
+	field (LOPR, "0")
+	field (PINI, "YES")
+	field (VAL, 1)
+	info (OID, "$(MIB)::enterprises.27358.33.1.6.2.0")
+}
+
+record (longout,"$(P)trapOnFanAlarm")
+{
+	field (DESC, "Trap will be sent on a Fan Alarm")
+	field (DTYP, "Snmp")
+	field (OUT,  "@$(IP) $(C) INTEGER: 128 i")
+	field (HOPR, "1")
+	field (LOPR, "0")
+	field (PINI, "YES")
+	field (VAL, 1)
+	info (OID, "$(MIB)::enterprises.27358.33.1.6.3.0")
+}
