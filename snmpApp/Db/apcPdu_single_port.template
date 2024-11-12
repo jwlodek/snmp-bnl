@@ -4,8 +4,9 @@
 record(stringout, "$(SYS)$(DEV)Sw:Name$(CHAN)-SP")
 {
 	field(DESC, "Set Outlet$(CHAN) Name")
-	field(DTYP, "Snmp")
-	field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) STRING: 100")
+	field(DTYP, "SnmpV1")
+	#field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) STRING: 100")
+	field(OUT,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) 20 s")
 	field(SCAN, "Passive")
 	field(FLNK, "$(SYS)$(DEV)Sw:Name$(CHAN)-RB")
 	field(VAL,  "$(ONAME)")
@@ -17,7 +18,8 @@ record(stringin, "$(SYS)$(DEV)Sw:Name$(CHAN)-RB")
 {
 	field(DESC, "Outlet$(CHAN) Name")
 	field(DTYP, "Snmp")
-	field(INP,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) STRING: 100")
+	#field(INP,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) STRING: 100")
+	field(INP,  "@$(IP) $(C) PowerNet-MIB::sPDUOutletName.$(CHAN) 20 s")
 	field(SCAN, "10 second")
 }
 
