@@ -31,9 +31,11 @@ snmp_DBD += system.dbd
 snmp_DBD += devIocStats.dbd
 snmp_DBD += asSupport.dbd
 snmp_DBD += caPutLog.dbd
+snmp_DBD += reccaster.dbd
+snmp_DBD += calc.dbd calcSupport.dbd
 
 # Add all the support libraries needed by this IOC
-snmp_LIBS += devIocStats autosave caPutLog devSnmp
+snmp_LIBS += devIocStats autosave caPutLog devSnmp reccaster calc
 
 # snmp_registerRecordDeviceDriver.cpp derives from snmp.dbd
 snmp_SRCS += snmp_registerRecordDeviceDriver.cpp
